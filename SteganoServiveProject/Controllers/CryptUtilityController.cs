@@ -7,6 +7,10 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.WindowsAzure.Mobile.Service;
+using System.Web.Http.Results;
+using System.Net.Http.Headers;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 
 namespace SteganoServiveProject.Controllers
 {
@@ -17,25 +21,29 @@ namespace SteganoServiveProject.Controllers
         Stream message = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("This is a default message"));
         Bitmap image = null;
         Stream key = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("Avi Mathur"));
+        String method = null;
 
-        // GET api/CryptUtility
-        public IHttpActionResult Get()
-        {
-            //Stream testHTML = File.Open("C:\\Users\\amathur\\Documents\\steganoproject\\SteganoServiveProject\\SteganoServiveProject\\Test.html",FileMode.Open);
-            return Ok<string>(File.ReadAllText("C:\\Users\\amathur\\Documents\\steganoproject\\SteganoServiveProject\\SteganoServiveProject\\Test.html"));
+        protected override ResponseMessageResult ResponseMessage(HttpResponseMessage response) {
+            return new ResponseMessageResult(response); 
         }
+        // GET api/CryptUtility
+        public HttpResponseMessage Get()
+        {
+            HttpResponseMessage testHtml = new HttpResponseMessage(HttpStatusCode.OK);
+            testHtml.Content = new StringContent(File.ReadAllText("C:\\Users\\amathur\\Documents\\steganoproject\\SteganoServiveProject\\SteganoServiveProject\\Test.html"));
+            testHtml.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+            return testHtml;
+          }
         // POST api/CryptUtility
-        public string Post()
+        public async Task<String> Post()
         {
             Services.Log.Info("Hello from custom controller!");
-            IEnumerator<KeyValuePair<string, string>> props = Request.GetQueryNameValuePairs().GetEnumerator();
-            props.MoveNext();
-            KeyValuePair<string, string> item = props.Current;
-            String method = item.Value;
+            NameValueCollection msg = await Request.Content.ReadAsFormDataAsync();
+            method = msg.Get("method");
+            message = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(msg.Get("msg")));
+            image = new Bitmap(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(msg.Get("image"))));
             if (method.Equals("encode"))
             {
-                props.MoveNext();
-                message = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(props.Current.Value));
                 //TODO
                 //CryptUtility.HideMessageInBitmap(message, image, key, useGrayScale);
             }
