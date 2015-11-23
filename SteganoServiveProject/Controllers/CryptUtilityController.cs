@@ -14,19 +14,25 @@ namespace SteganoServiveProject.Controllers
     {
         public ApiServices Services { get; set; }
         bool useGrayScale = false;
-        Stream message = null;
+        Stream message = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("This is a default message"));
         Bitmap image = null;
         Stream key = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("Avi Mathur"));
 
         // GET api/CryptUtility
-        public string Get()
+        public IHttpActionResult Get()
+        {
+            //Stream testHTML = File.Open("C:\\Users\\amathur\\Documents\\steganoproject\\SteganoServiveProject\\SteganoServiveProject\\Test.html",FileMode.Open);
+            return Ok<string>(File.ReadAllText("C:\\Users\\amathur\\Documents\\steganoproject\\SteganoServiveProject\\SteganoServiveProject\\Test.html"));
+        }
+        // POST api/CryptUtility
+        public string Post()
         {
             Services.Log.Info("Hello from custom controller!");
             IEnumerator<KeyValuePair<string, string>> props = Request.GetQueryNameValuePairs().GetEnumerator();
             props.MoveNext();
-            KeyValuePair<string,string> item = props.Current;
-            String method = item.value;
-            if(method.Equals("encode"))
+            KeyValuePair<string, string> item = props.Current;
+            String method = item.Value;
+            if (method.Equals("encode"))
             {
                 props.MoveNext();
                 message = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(props.Current.Value));
@@ -38,6 +44,8 @@ namespace SteganoServiveProject.Controllers
                 //TODO
                 //CryptUtility.ExtractMessageFromBitmap(image, key, ref message);
             }
+            return message.ToString();
+
         }
 
         public class CryptUtility
