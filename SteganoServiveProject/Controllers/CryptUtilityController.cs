@@ -33,15 +33,17 @@ namespace SteganoServiveProject.Controllers
             testHtml.Content = new StringContent(File.ReadAllText("C:\\Users\\amathur\\Documents\\steganoproject\\SteganoServiveProject\\SteganoServiveProject\\Test.html"));
             testHtml.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
             return testHtml;
-          }
+        }
         // POST api/CryptUtility
         public async Task<String> Post()
         {
             Services.Log.Info("Hello from custom controller!");
-            NameValueCollection msg = await Request.Content.ReadAsFormDataAsync();
-            method = msg.Get("method");
-            message = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(msg.Get("msg")));
-            image = new Bitmap(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(msg.Get("image"))));
+            MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider("C:\\Users\\amathur\\Downloads");
+            streamProvider = await Request.Content.ReadAsMultipartAsync(streamProvider);
+            method = streamProvider.FormData.Get("method");
+            message = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(streamProvider.FormData.Get("msg")));
+            image  = new Bitmap(streamProvider.FileData[0].LocalFileName);
+            //image = new Bitmap("C:\\Users\\amathur\\Downloads\\BodyPart.jpg");
             if (method.Equals("encode"))
             {
                 //TODO
@@ -52,8 +54,22 @@ namespace SteganoServiveProject.Controllers
                 //TODO
                 //CryptUtility.ExtractMessageFromBitmap(image, key, ref message);
             }
-            return message.ToString();
+            String final = System.Text.Encoding.UTF8.GetString(ReadFully(message));
+            return final;
 
+        }
+        public static byte[] ReadFully(Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
         }
 
         public class CryptUtility
