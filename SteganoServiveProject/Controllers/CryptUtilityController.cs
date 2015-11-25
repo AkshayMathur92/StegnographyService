@@ -22,15 +22,12 @@ namespace SteganoServiveProject.Controllers
         Bitmap image = null;
         Stream key = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("Avi Mathur"));
         String method = null;
-
-        protected override ResponseMessageResult ResponseMessage(HttpResponseMessage response) {
-            return new ResponseMessageResult(response); 
-        }
         // GET api/CryptUtility
         public HttpResponseMessage Get()
         {
+            
             HttpResponseMessage testHtml = new HttpResponseMessage(HttpStatusCode.OK);
-            testHtml.Content = new StringContent(File.ReadAllText("C:\\Users\\amathur\\Documents\\steganoproject\\SteganoServiveProject\\SteganoServiveProject\\Test.html"));
+            testHtml.Content = new StringContent(Properties.Resources.TestHTML);
             testHtml.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
             return testHtml;
         }
