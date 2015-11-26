@@ -11,6 +11,7 @@ using System.Web.Http.Results;
 using System.Net.Http.Headers;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using System.Drawing.Imaging;
 
 namespace SteganoServiveProject.Controllers
 {
@@ -18,9 +19,9 @@ namespace SteganoServiveProject.Controllers
     {
         public ApiServices Services { get; set; }
         bool useGrayScale = false;
-        Stream message = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("This is a default message"));
+        Stream message = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("This is a default message"));
         Bitmap image = null;
-        Stream key = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("Avi Mathur"));
+        Stream key = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("123"));
         String method = null;
         // GET api/CryptUtility
         public HttpResponseMessage Get()
@@ -35,23 +36,26 @@ namespace SteganoServiveProject.Controllers
         public async Task<String> Post()
         {
             Services.Log.Info("Hello from custom controller!");
-            MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider("C:\\Users\\amathur\\Downloads");
+            MyMultipartFormDataStreamProvider streamProvider = new MyMultipartFormDataStreamProvider();
             streamProvider = await Request.Content.ReadAsMultipartAsync(streamProvider);
-            method = streamProvider.FormData.Get("method");
-            message = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(streamProvider.FormData.Get("msg")));
-            image  = new Bitmap(streamProvider.FileData[0].LocalFileName);
+            method = streamProvider.FormData.Get("\"method\"");
+            message = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(streamProvider.FormData.Get("\"msg\"")));
+            //image  = new Bitmap(streamProvider.FileData[0].LocalFileName);
             //image = new Bitmap("C:\\Users\\amathur\\Downloads\\BodyPart.jpg");
+            image = streamProvider.image;
+            //image.Save("C:\\Users\\amathur\\Downloads\\myCryptimage.jpg");
             if (method.Equals("encode"))
             {
                 //TODO
-                //CryptUtility.HideMessageInBitmap(message, image, key, useGrayScale);
+                CryptUtility.HideMessageInBitmap(message, ref image, key, useGrayScale);
+                image.Save("C:\\Users\\amathur\\Downloads\\myCryptimage.png",ImageFormat.Png);
             }
             else
             {
                 //TODO
-                //CryptUtility.ExtractMessageFromBitmap(image, key, ref message);
+                CryptUtility.ExtractMessageFromBitmap(image, key, ref message);
             }
-            String final = System.Text.Encoding.UTF8.GetString(ReadFully(message));
+            String final = System.Text.Encoding.ASCII.GetString(ReadFully(message));
             return final;
 
         }
@@ -76,10 +80,10 @@ namespace SteganoServiveProject.Controllers
             /// <param name="messageStream">The message to hide</param>
             /// <param name="bitmap">The carrier bitmap</param>
             /// <param name="keyStream">The key to use</param>
-            public static void HideMessageInBitmap(Stream messageStream, Bitmap bitmap, Stream keyStream, bool useGrayscale)
+            public static void HideMessageInBitmap(Stream messageStream, ref Bitmap bitmap, Stream keyStream, bool useGrayscale)
             {
                 HideOrExtract(ref messageStream, bitmap, keyStream, false, useGrayscale);
-                messageStream = null;
+                //messageStream = null;
             }
 
             /// <summary>Extracts an hidden message from a bitmap</summary>
@@ -250,8 +254,8 @@ namespace SteganoServiveProject.Controllers
                 }
 
                 //the stream will be closed by the calling method
-                bitmap = null;
-                keyStream = null;
+                //bitmap = null;
+                //keyStream = null;
             }
 
             /// <summary>Return one component of a color</summary>
