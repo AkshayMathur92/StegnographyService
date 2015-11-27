@@ -1,7 +1,7 @@
 <HTML>
 <BODY>
 <FORM name="steganoapi" method="post" enctype="multipart/form-data">
-    <INPUT type="text" name="method" value="encode" hidden/>
+    <INPUT type="text" name="method" value="decode" hidden/>
     <INPUT type="text" name="msg" REQUIRED/>
     <INPUT type = FILE name="image" action = "http://localhost:61189/api/CryptUtility"  REQUIRED/> 
     <INPUT type = SUBMIT />

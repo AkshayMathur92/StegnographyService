@@ -21,7 +21,7 @@ namespace SteganoServiveProject.Controllers
         bool useGrayScale = false;
         Stream message = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("This is a default message"));
         Bitmap image = null;
-        Stream key = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("123"));
+        Stream key = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("Avi Mathur"));
         String method = null;
         // GET api/CryptUtility
         public HttpResponseMessage Get()
@@ -53,7 +53,7 @@ namespace SteganoServiveProject.Controllers
             else
             {
                 //TODO
-                CryptUtility.ExtractMessageFromBitmap(image, key, ref message);
+                CryptUtility.ExtractMessageFromBitmap(ref image, key, ref message);
             }
             String final = System.Text.Encoding.ASCII.GetString(ReadFully(message));
             return final;
@@ -82,17 +82,18 @@ namespace SteganoServiveProject.Controllers
             /// <param name="keyStream">The key to use</param>
             public static void HideMessageInBitmap(Stream messageStream, ref Bitmap bitmap, Stream keyStream, bool useGrayscale)
             {
-                HideOrExtract(ref messageStream, bitmap, keyStream, false, useGrayscale);
-                //messageStream = null;
+                HideOrExtract(ref messageStream, ref bitmap, keyStream, false, useGrayscale);
+                messageStream.Seek(0, SeekOrigin.Begin);
             }
 
             /// <summary>Extracts an hidden message from a bitmap</summary>
             /// <param name="bitmap">The carrier bitmap</param>
             /// <param name="keyStream">The key used for hiding the message</param>
             /// <param name="messageStream">Empty stream to receive the message</param>
-            public static void ExtractMessageFromBitmap(Bitmap bitmap, Stream keyStream, ref Stream messageStream)
+            public static void ExtractMessageFromBitmap(ref Bitmap bitmap, Stream keyStream, ref Stream messageStream)
             {
-                HideOrExtract(ref messageStream, bitmap, keyStream, true, false);
+                HideOrExtract(ref messageStream,ref bitmap, keyStream, true, false);
+                messageStream.Seek(0, SeekOrigin.Begin);
             }
 
             /// <summary>Stepts through the pixels of a bitmap using a key pattern and hides or extracts a message</summary>
@@ -100,7 +101,7 @@ namespace SteganoServiveProject.Controllers
             /// <param name="bitmap">The carrier bitmap</param>
             /// <param name="keyStream">The key specifying the unchanged pixels between two hidden bytes</param>
             /// <param name="extract">Extract a hidden message (true), or hide a message in a clean carrier bitmap (false)</param>
-            private static void HideOrExtract(ref Stream messageStream, Bitmap bitmap, Stream keyStream, bool extract, bool useGrayscale)
+            private static void HideOrExtract(ref Stream messageStream, ref Bitmap bitmap, Stream keyStream, bool extract, bool useGrayscale)
             {
                 //Current count of pixels between two hidden message-bytes
                 //Changes with every hidden byte according to the key
