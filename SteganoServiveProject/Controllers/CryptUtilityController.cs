@@ -33,30 +33,36 @@ namespace SteganoServiveProject.Controllers
             return testHtml;
         }
         // POST api/CryptUtility
-        public async Task<String> Post()
+        public async Task<HttpResponseMessage> Post()
         {
-            Services.Log.Info("Hello from custom controller!");
+            HttpResponseMessage returnHTML = new HttpResponseMessage(HttpStatusCode.OK);
+            //Services.Log.Info("Hello from custom controller!");
+            
             MyMultipartFormDataStreamProvider streamProvider = new MyMultipartFormDataStreamProvider();
             streamProvider = await Request.Content.ReadAsMultipartAsync(streamProvider);
             method = streamProvider.FormData.Get("\"method\"");
             message = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(streamProvider.FormData.Get("\"msg\"")));
-            //image  = new Bitmap(streamProvider.FileData[0].LocalFileName);
-            //image = new Bitmap("C:\\Users\\amathur\\Downloads\\BodyPart.jpg");
             image = streamProvider.image;
-            //image.Save("C:\\Users\\amathur\\Downloads\\myCryptimage.jpg");
             if (method.Equals("encode"))
             {
                 //TODO
                 CryptUtility.HideMessageInBitmap(message, ref image, key, useGrayScale);
-                image.Save("C:\\Users\\amathur\\Downloads\\myCryptimage.png",ImageFormat.Png);
+                returnHTML.Content = new ByteArrayContent(ImageToByte2(image));
+                returnHTML.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                returnHTML.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline");
+                returnHTML.Content.Headers.ContentDisposition.FileName = "SecretImage.png";
+
+                //image.Save("C:\\Users\\amathur\\Downloads\\myCryptimage.png",ImageFormat.Png);
             }
             else
             {
                 //TODO
                 CryptUtility.ExtractMessageFromBitmap(ref image, key, ref message);
+                returnHTML.Content = new StringContent(System.Text.Encoding.ASCII.GetString(ReadFully(message)));
+                returnHTML.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                returnHTML.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline");
             }
-            String final = System.Text.Encoding.ASCII.GetString(ReadFully(message));
-            return final;
+            return returnHTML;
 
         }
         public static byte[] ReadFully(Stream input)
@@ -71,6 +77,18 @@ namespace SteganoServiveProject.Controllers
                 }
                 return ms.ToArray();
             }
+        }
+        public static byte[] ImageToByte2(Image img)
+        {
+            byte[] byteArray = new byte[0];
+            using (MemoryStream stream = new MemoryStream())
+            {
+                img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                stream.Close();
+
+                byteArray = stream.ToArray();
+            }
+            return byteArray;
         }
 
         public class CryptUtility

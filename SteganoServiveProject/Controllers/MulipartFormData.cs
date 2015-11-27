@@ -28,7 +28,7 @@ namespace System.Net.Http
         private Collection<bool> _isFormData = new Collection<bool>();
 
         //For Image
-        public Bitmap image = null;
+        public Bitmap image { get; set; } = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultipartFormDataStreamProvider"/> class.
