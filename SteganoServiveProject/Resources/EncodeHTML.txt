@@ -1,0 +1,9 @@
+<HTML>
+<BODY>
+<FORM name="steganoapiencode" method="post" enctype="multipart/form-data">
+    <INPUT type= TEXT name=message REQUIRED/>
+    <INPUT type = FILE name=image action = "http://localhost:61189/api/Encode"  REQUIRED/> 
+    <INPUT type = SUBMIT />
+</FORM>
+</BODY>
+</HTML>

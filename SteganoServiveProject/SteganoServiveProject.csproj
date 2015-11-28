@@ -221,6 +221,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CryptUtility.cs" />
+    <Compile Include="Controllers\DecodeController.cs" />
+    <Compile Include="Controllers\EncodeController.cs" />
     <Compile Include="Controllers\MulipartFormData.cs" />
     <Compile Include="Controllers\CryptUtilityController.cs" />
     <Compile Include="Controllers\TodoItemController.cs" />
@@ -240,6 +243,8 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <None Include="Resources\TestHTML.txt" />
+    <None Include="Resources\DecodeHTML.txt" />
+    <None Include="Resources\EncodeHTML.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

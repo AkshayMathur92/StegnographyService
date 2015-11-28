@@ -1,0 +1,10 @@
+<HTML>
+<BODY>
+<FORM name="steganoapidecode" method="post" enctype="multipart/form-data">
+    <INPUT type="text" name="method" value="decode" hidden/>
+    <INPUT type="text" name="msg" value="" hidden/>
+    <INPUT type = FILE name="image" action = "http://localhost:61189/api/Decode"  REQUIRED/> 
+    <INPUT type = SUBMIT />
+</FORM>
+</BODY>
+</HTML>

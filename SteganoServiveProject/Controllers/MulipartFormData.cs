@@ -105,6 +105,7 @@ namespace System.Net.Http
                     // Extract name from Content-Disposition header. We know from earlier that the header is present.
                     ContentDispositionHeaderValue contentDisposition = formContent.Headers.ContentDisposition;
                     string formFieldName = contentDisposition.Name ?? String.Empty;
+                    formFieldName = formFieldName.Replace("\"", "");
 
                     // Read the contents as string data and add to form data
                     string formFieldValue = await formContent.ReadAsStringAsync();

@@ -63,14 +63,51 @@ namespace SteganoServiveProject.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;HTML&gt;
         ///&lt;BODY&gt;
-        ///&lt;FORM name=&quot;steganoapi&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
-        ///    &lt;INPUT type=&quot;text&quot; name=&quot;method&quot; value=&quot;encode&quot; hidden/&gt;
-        ///    &lt;INPUT type=&quot;text&quot; name=&quot;msg&quot;/&gt;
-        ///    &lt;INPUT type = FILE name=&quot;image&quot; action = &quot;http://localhost:61189/api/CryptUtility&quot;  REQUIRED/&gt; 
+        ///&lt;FORM name=&quot;steganoapidecode&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+        ///    &lt;INPUT type=&quot;text&quot; name=&quot;method&quot; value=&quot;decode&quot; hidden/&gt;
+        ///    &lt;INPUT type=&quot;text&quot; name=&quot;msg&quot; value=&quot;&quot; hidden/&gt;
+        ///    &lt;INPUT type = FILE name=&quot;image&quot; action = &quot;http://localhost:61189/api/Decode&quot;  REQUIRED/&gt; 
         ///    &lt;INPUT type = SUBMIT /&gt;
         ///&lt;/FORM&gt;
         ///&lt;/BODY&gt;
         ///&lt;/HTML&gt;.
+        /// </summary>
+        internal static string DecodeHTML {
+            get {
+                return ResourceManager.GetString("DecodeHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;HTML&gt;
+        ///&lt;BODY&gt;
+        ///&lt;FORM name=&quot;steganoapiencode&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+        ///    &lt;INPUT type=&quot;text&quot; name=&quot;msg&quot; REQUIRED/&gt;
+        ///    &lt;INPUT type = FILE name=&quot;image&quot; action = &quot;http://localhost:61189/api/Encode&quot;  REQUIRED/&gt; 
+        ///    &lt;INPUT type = SUBMIT /&gt;
+        ///&lt;/FORM&gt;
+        ///&lt;/BODY&gt;
+        ///&lt;/HTML&gt;.
+        /// </summary>
+        internal static string EncodeHTML {
+            get {
+                return ResourceManager.GetString("EncodeHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;HTML&gt;
+        ///&lt;BODY&gt;
+        ///&lt;FORM name=&quot;steganoapiencode&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+        ///    &lt;INPUT type=&quot;text&quot; name=&quot;method&quot; value=&quot;encode&quot; hidden/&gt;
+        ///    &lt;INPUT type=&quot;text&quot; name=&quot;msg&quot; REQUIRED/&gt;
+        ///    &lt;INPUT type = FILE name=&quot;image&quot; action = &quot;http://localhost:61189/api/CryptUtility&quot;  REQUIRED/&gt; 
+        ///    &lt;INPUT type = SUBMIT /&gt;
+        ///&lt;/FORM&gt;
+        ///&lt;HR&gt;
+        ///&lt;FORM name=&quot;steganoapidecode&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+        ///    &lt;INPUT type=&quot;text&quot; name=&quot;method&quot; value=&quot;decode&quot; hidden/&gt;
+        ///    &lt;INPUT type=&quot;text&quot; name=&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TestHTML {
             get {
