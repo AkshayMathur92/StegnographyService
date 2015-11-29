@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -29,8 +27,6 @@ namespace SteganoServiveProject.Controllers
         }
         public async System.Threading.Tasks.Task<HttpResponseMessage> Post()
         {
-            //String req = await this.Request.Content.ReadAsStringAsync();
-            //new Bitmap(new MemoryStream(req)).Save("C:\\Users\\amathur\\Downloads\\mobileimage.png");
             MyMultipartFormDataStreamProvider streamProvider = new MyMultipartFormDataStreamProvider();
             streamProvider = await Request.Content.ReadAsMultipartAsync(streamProvider);
             image = streamProvider.image;
